@@ -1,6 +1,3 @@
-Now that I know better, and due to demands in the answers on the yield keyword and the decorators, I'm going to answer this question with a lot of detail.
-
-Disclaimer: very long post.
 
 Classes as objects
 Before understanding metaclasses, you need to master classes in Python. And Python has a very peculiar idea of what classes are, borrowed from the Smalltalk language.
