@@ -1,0 +1,71 @@
+Checking if a list is empty
+
+s not necessary to call the function len to check if a list is empty because an empty list evaluates to False. So instead of doing:
+if len(mylist):
+    # Do something with my list
+else:
+    # The list is empty
+You can simply do:
+if mylist:
+    # Do something with my list
+else:
+    # The list is empty
+Getting indexes of elements while iterating over a list
+
+Sometimes you need to iterate over a list and at the same time get the index of each element. Instead of doing:
+i = 0
+for element in mylist:
+    # Do something with i and element
+    i += 1
+You can simply do:
+for i, element in enumerate(mylist):
+    # Do something with i and element
+    pass
+Sorting a list
+
+s quite common to sort a list based on one of the characteristics of its elements. Here for example, we create a list of persons:
+class Person(object):
+    def __init__(self, age):
+        self.age = age
+
+persons = [Person(age) for age in (14, 78, 42)]
+We then want to sort the list based on the age. Here is how we could do it:
+def get_sort_key(element):
+    return element.age
+
+for element in sorted(persons, key=get_sort_key):
+    print "Age:", element.age
+We define a function that returns the attribute we want to use as a sorting criteria and we pass this function as the key argument to the function sorted. This kind of sorting is so common that Python standard library includes ready-made functions to do that.
+from operator import attrgetter
+
+for element in sorted(persons, key=attrgetter('age')):
+    print "Age:", element.age
+attrgetter is a higher-order function that returns a function similar to our get_sort_key function. We saved a few keystrokes (in that respect a lambda would have been good too) but more importantly I feel it makes the code easier to read. When you see attrgetter you know immediately what it will get an attribute. The operator module also provides itemgetter and methodcaller and m sure you can guess what they do.
+Grouping elements in a dictionary
+
+The last tip ll give you today is about dictionaries. s a quite common task to group elements of a list based on a criteria. In order to do that we build a dictionary of lists indexed by that criteria. s say we have list of persons.
+class Person(object):
+    def __init__(self, age):
+        self.age = age
+
+persons = [Person(age) for age in (78, 14, 78, 42, 14)]
+Now we want to group these persons by age. One approach could be:
+persons_by_age = {}
+
+for person in persons:
+    age = person.age
+    if age in persons_by_age:
+        persons_by_age[age].append(person)
+    else:
+        persons_by_age[age] = [person]
+
+assert len(persons_by_age[78]) == 2
+For each iteration we test if the key exists using the in operator. It s not present, we need to create a list for this key using the current element.
+The collections module offers a defaultdict that sightly simplify this process.
+from collections import defaultdict
+
+persons_by_age = defaultdict(list)
+
+for person in persons:
+    persons_by_age[person.age].append(person)
+When you create a defaultdict, you pass it a callable that it will use to create values for the dict when a key is missing. Here we pass it list so s going to create a list for each new key.
